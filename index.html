@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Reasoning LLMs Are Just Efficient Samplers:
+        RL Training Elicits No Transcending Capacity"> 
+  <meta name="keywords" content="Qwen, Deepseek-R1, PPO, GRPO, AIME, RLVR, Tsinghua University"> <!-- TODO: add some keywords for search engine -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Limit of RLVR</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome_6_7_2.all.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome_6_7_2.all.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            Beyond the 80/20 Rule: High-Entropy Minority Tokens Drive Effective Reinforcement Learning for LLM Reasoning
+          </h1>
+
+          <div class="publication-authors">
+              <!-- 作者列表 -->
+            <div class="is-size-4 author-list">
+              <span class="author-block">
+                <a href="https://shenzhi-wang.netlify.app/" class="author-name">Shenzhi Wang</a><sup class="affiliation">1,2</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://yule-buaa.github.io/" class="author-name">Le Yu</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://gao-xiao-bai.github.io/" class="author-name">Gao Chang</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://chujiezheng.github.io/" class="author-name">Chujie Zheng</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="" class="author-name">Shixuan Liu</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://lr32768.github.io/" class="author-name">Rui Lu</a><sup class="affiliation">2</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=WQuf6hwAAAAJ" class="author-name">Kai Dang</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://xionghuichen.github.io/" class="author-name">Xionghui Chen</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="" class="author-name">Jianxin Yang</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=scujDKkAAAAJ" class="author-name">Zhenru Zhang</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="" class="author-name">Yuqiong Liu</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=vO9FZekAAAAJ" class="author-name">An Yang</a><sup class="affiliation">1</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://andrewzh112.github.io/" class="author-name">Andrew Zhao</a><sup class="affiliation">2</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://yueyang130.github.io/" class="author-name">Yang Yue</a><sup class="affiliation">2</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=rw6vWdcAAAAJ" class="author-name">Shiji Song</a><sup class="affiliation">2</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://yubowen-ph.github.io/" class="author-name">Bowen Yu</a><sup class="affiliation">1,&#9993;,†</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://www.gaohuang.net/" class="author-name">Gao Huang</a><sup class="affiliation">2,&#9993;</sup>
+              </span>
+              <span class="author-block">
+                and <a href="https://justinlin610.github.io/" class="author-name">Junyang Lin</a><sup class="affiliation">1</sup>
+              </span>
+            </div>
+          
+            <!-- 机构信息 -->
+            <div class="institutions is-size-5">
+              <span class="institution"><sup>1</sup><a href="https://huggingface.co/Qwen">Qwen Team, Alibaba Inc.</a></span>
+              <span class="institution">&nbsp;&nbsp;</span> <!-- 间隔符 -->
+              <span class="institution"><sup>2</sup><a href="https://www.leaplab.ai">LeapLab, Tsinghua University</a></span>
+            </div>
+          
+            <!-- 贡献说明 -->
+            <div class="contribution-notes is-size-5">
+              <span class="note"><sup>&#9993;</sup> Corresponding Authors</span>
+              <span class="note">&nbsp;&nbsp;</span>
+              <span class="note"><sup>†</sup>Project Lead</span>
+            </div>
+          
+            <div class="corresponding-authors is-size-5">
+              Emails: 
+              <a href="mailto:wangshenzhi99@gmail.com">
+                wangshenzhi99@gmail.com
+              </a>, 
+              <a href="mailto:yubowen.ph@gmail.com">
+                yubowen.ph@gmail.com
+              </a>,
+              <a href="mailto:gaohuang@tsinghua.edu.cn">
+                gaohuang@tsinghua.edu.cn
+              </a>
+            </div>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <!-- <i class="fas fa-file-pdf"></i> -->
+                      <i class="fa-solid fa-file-pdf" style="color: #ec4646;"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Arxiv Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/Shenzhi-Wang/RLVR-Only-High-Entropy-Minority-Tokens"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>GitHub</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://huggingface.co/datasets/BytedTsinghua-SIA/DAPO-Math-17k"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fa-regular fa-database"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+              </span> -->
+              <!-- Model Link. -->
+              <!-- <span class="link-block">
+                <a href="https://huggingface.co/BytedTsinghua-SIA/DAPO-Qwen-32B"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"> -->
+                    <!-- <i class="fa-solid fa-face-smiling-hands"></i> -->
+                    <!-- <i class="fa-solid fa-face-smiling-hands" style="color: #FFD43B;"></i>
+                  </span>
+                  <span>Model</span>
+                  </a>
+              </span> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Ad -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified">
+          <p style="color: purple; background-color: #FFFFE0; font-size: 1.1rem;">
+            <i><a href="https://yueyang130.github.io/" class="author-name" style="font-size: 1.35rem;"><b>Yang Yue</b></a> is currently focused on developing new paradigms for incentivizing LLM/MLLM reasoning, generalized world models, and exploring the generalization of VLA. 
+            He is seeking active collaboration opportunities with companies that offer the freedom to explore these frontier and fundamental questions, alongside abundant resources and a strong technical atmosphere. 
+            Additionally, he is seeking a Ph.D. visit. Please feel free to reach out if there is potential for collaboration.
+            </i>
+          </p>  
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Video -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="subtitle has-text-centered">
+          <video autoplay loop muted playsinline style="max-width: 100%;">
+            <source src="./static/video/introvideo.mp4" type="video/mp4">
+            <source src="./static/video/introvideo.webm" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+        </h2>
+        <p style="font-size: 0.8rem;">
+          Video: pass@<i>k</i> curves of base models and their zero-RL-trained counterparts across multiple mathematical benchmarks. <br>
+          When <i>k</i> is small, RL-trained models outperform their base versions. However, as <i>k</i> increases to the tens or hundreds, <br>
+          base models consistently catch up with RL-trained models across all benchmarks and LLM families without exception. <br>
+          Eventually, base models surpass RL-trained models.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>    
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introducing Our Work</h2>
+        <div class="content has-text-justified">
+          <p>  
+            Recent breakthroughs in reasoning-focused large language models (LLMs) like OpenAI-o1, DeepSeek-R1, and Kimi-1.5 have largely relied on <i>Reinforcement Learning with Verifiable Rewards</i> (RLVR), which replaces human annotations with automated rewards (e.g., verified math solutions or passing code tests) to scale self-improvement. While RLVR enhances reasoning behaviors such as self-reflection and iterative refinement, we challenge a core assumption:  
+          </p>  
+          <p style="font-size: 1.25rem;">  
+          <i><b>Does RLVR actually expand LLMs' reasoning capabilities, or does it merely optimize existing ones?</b></i>  
+          </p>  
+          <p>  
+          By evaluating models via <i>pass@k</i>, where success requires just one correct solution among <i>k</i> attempts, we uncover that RL-trained models excel at low <i>k</i> (e.g., pass@1) but are consistently <i>outperformed by base models</i> at high <i>k</i> (e.g., pass@256). This demonstrates that RLVR <i>narrows the model's exploration</i>, favoring known high-reward paths instead of discovering new reasoning strategies. Crucially, all correct solutions from RL-trained models already exist in the base model's distribution, proving RLVR enhances <i>sampling efficiency</i>, not reasoning capacity, while inadvertently shrinking the solution space.  
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <video autoplay loop muted playsinline style="max-width: 100%;">
+          <source src="./static/video/overviewvideo.mp4" type="video/mp4">
+          <source src="./static/video/overviewvideo.webm" type="video/webm">
+          Your browser does not support the video tag.
+        </video>
+        <!-- <h2 class="subtitle has-text-centered">
+          <img src="./static/images/overview.png"/>
+        </h2> -->
+        <p style="font-size: 0.8rem;">
+          Video: The effect of RLVR on LLM's reasoning ability. Search trees are generated by repeated sampling from the base and <br>
+          RLVR-trained models for a given problem. Grey indicates paths that are unlikely to be sampled by the model, while black <br>
+          indicates paths that are likely to be sampled. Green indicates correct paths, which has positive rewards. <br>
+          Our key finding is that all reasoning paths in the RLVR model are already present in the base model. <br>
+          For certain problems like Problem A, RLVR training biases the distribution toward rewarded paths, improving sampling <br>
+          efficiency. However, this comes at the cost of reduced scope of reasoning capacity: For other problems like Problem B, <br>
+          the base model contains the correct path, whereas that of the RLVR model does not.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Conclusion -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Conclusion</h2>
+        <div class="content has-text-justified">
+          <ol>
+            <li>
+              <span style="font-size: 1.15em;"><b>RL-trained models perform worse than base models in pass@<i>k</i> at large k values.</b></span> <br>
+              While RL-trained models outperform base models at low sampling sizes (small <i>k</i>), base models consistently surpass them at larger <i>k</i> across all benchmarks, even achieving higher pass@<i>k</i> scores. Manual inspection reveals that base models can solve problems thought to require RL training by generating diverse reasoning paths, with at least one correct solution per problem. This indicates that RL training does not enhance—and may even limit—the full reasoning potential of LLMs compared to aggressive sampling in the base model.
+            </li>
+            <li>
+              <span style="font-size: 1.15em;"><b>RL boosts sampling efficiency but reduces the reasoning capacity boundary.</b></span> <br>
+              The analysis reveals that RLVR-trained models generate reasoning paths already within the base model's output distribution, meaning RLVR biases the model toward higher-rewarded solutions rather than creating entirely new reasoning abilities. However, this focus on rewarded paths reduces the model's exploration capacity, limiting its coverage of solvable problems at larger sampling sizes. These findings suggest that RLVR does not fundamentally transcend the base model's reasoning capabilities but instead optimizes existing pathways at the cost of broader problem-solving diversity.
+            </li>
+            <li>
+              <span style="font-size: 1.15em;"><b>RLVR algorithms perform similarly and remain far from optimal.</b></span> <br> 
+              The study compares various RL algorithms (PPO, GRPO, Reinforce++) and finds their performance differences minor, as measured by the sampling efficiency gap (∆SE), which assesses how close they get to optimal sampling efficiency. Despite slight variations in ∆SE among algorithms, the gap remains large across all methods. This indicates that current RL approaches, focused on improving sampling efficiency, still fall far short of optimal performance.
+            </li>
+            <li>
+              <span style="font-size: 1.15em;"><b>RLVR and distillation are fundamentally different.</b></span> <br>
+              While RL improves sampling efficiency, distillation can genuinely introduce new knowledge into the model. As a result, distilled models often exhibit an expanded scope of reasoning capability beyond that of the base model by learning from distilled models, in contrast to RLVR-trained models whose capacity remains bounded by the base.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Q&A Section -->
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered" style="margin-bottom: 3rem;">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-comments" style="color: #2196F3;"></i>
+            </span>
+            <span>Q&A</span>
+          </span>
+        </h2>
+
+        <!-- Q&A Item 1 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">01</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              You're using pass@<i>k</i> instead of majority vote—doesn't that make the results invalid?
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                [1/3] We use pass@<i>k</i> <b>not to measure practical utility</b>, but to explore the <b>reasoning capacity boundary</b> of LLMs, as outlined in our paper. <br>
+                [2/3] If a model can solve a difficult problem at least once in <i>k</i> samples, we consider that problem within its potential reasoning scope. If RL training truly expands reasoning, we would expect the RL model to solve more such problems than the base. <br>
+                [3/3] However, we observe the opposite: <b>RLVR models often solve <i>fewer</i> problems at large <i>k</i></b>, suggesting a narrowing of this boundary. This implies RLVR is optimizing within the base model's capabilities, not extending them.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A Item 2 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">02</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              Isn't pass@<i>k</i> meaningless since you could eventually guess the right answer through randomly sampling <i>k</i> times?
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                [1/3] It's true that pass@1024 can be noisy for datasets like AIME whose answers are within limited integer space. But we also evaluated <b>coding benchmarks</b>, where guessing is nearly impossible to pass unit test case, and yet similar patterns hold, with base models performing better at large <i>k</i>. <br>
+                [2/3] For <b>AIME</b> and <b>GSM8K</b>, we manually inspected the CoT outputs and found that, in most cases, the base model produced <b>at least one <i>correct</i> reasoning path</b>—not just lucky guesses. <br>
+                [3/3] On datasets usch <b>MATH500</b>, where answers involve complex forms (roots, fractions, symbolic math) and are hard to guess, we again observed similar trends. <br>
+                Together, these results highlight the often underappreciated <b>reasoning potential of base models</b>. We're considering including a random sampling baseline in future work.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A Item 3 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">03</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              <b>Even random sampling can eventually generate the correct answer with a large enough <i>k</i>. So doesn't that make your result—that RL improves over base model's pass@<i>k</i>—meaningless?</b>
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                Not quite. <b>“More is different.”</b> While it's true that in theory, even random typing has a non-zero chance of producing a correct answer—about 1/V^L, where V is the vocabulary size (~30k) and L is the output length (>200). However, in practice, that search space is <b>astronomically large</b>. <br>
+                The key point is that the <b>magnitude of that probability matters</b>. If the base model has a prior that gives the correct answer a 1 in 10⁴ or 10⁵ chance, then RL might find it with millions of samples. But if that probability is 1 in 10¹⁰ or smaller, <b>RL is extremely unlikely to escape local optima</b> and reach meaningful reward. <br>
+                In our paper, we show that for most problems, <b>this probability is not negligible</b>—we observe correct outputs with <i>k</i> = 128 or 1024, which is feasible with today's resources. So rather than being meaningless, <b>pass@<i>k</i> reveals that base models already possess the necessary reasoning paths</b>.              
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A Item 4 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">04</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              <b>Isn't it common sense that RL should turn pass@<i>k</i> into pass@1?</b>
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                It's not surprising that RLVR turns pass@<i>k</i> into pass@1—that's what RL is designed for. <br>
+                But what's more interesting is that <b>RLVR doesn't do much beyond that in our experiments</b>. It doesn't seem to introduce new reasoning abilities: <b>if the base model can't solve a problem, the RL-trained model still can't either.</b> This clearly highlights the <b>upper bound of RL in reasoning</b>. <br>
+                And that's not something obvious. In traditional RL such as Atari or Go, RL is known to <b>explore and discover new strategies, continuously self-improving without an inherent bound</b>. But in the case of LLMs, RLVR seems constrained by the base model's existing capabilities. <br>
+                Actually, this phenomenon that <b>RL-trained models perform worse than base models in pass@<i>k</i></b> surprises lots of researchers.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Q&A Item 5 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">05</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              Does your paper claim that RL can't incentivize reasoning beyond the base model?
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                No, we're not making such a strong claim. Our goal is to <b>present systematic experiments and analyses</b> to explore the question: <i>"Does RL truly expand reasoning capacity in LLMs?"</i> and hope bring some new insights for the community. <br>
+                We don't rule out the possibility that <b>scaling up model size and training data</b> could change the outcome. In fact, we're currently working on <b>DeepSeek-V3-base vs. R1-zero</b> to investigate this further.              
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A Item 6 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">06</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              Is your paper saying RL is useless?
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                No. RL remains <b>practically useful</b> because it improves sample efficiency. However, if we want LLMs to solve <b>truly harder problems beyond pretraining</b>, we may need <b>a new training paradigm</b> that can go beyond the base model's ceiling.              
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A Item 7 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <div class="q-marker">
+              <span class="q-number" style="font-size: 2em;">07</span>
+              <span class="q-icon">Q</span>
+            </div>
+            <h3 class="question-text" style="font-size: 1.25em;">
+              <b>DeepSeek-Math reported similar results. How is your work different?</b>
+            </h3>
+          </div>
+          <div class="qa-answer">
+            <div class="a-marker">
+              <span class="a-icon">A</span>
+            </div>
+            <div class="answer-text" style="font-size: 0.9em;">
+              <p>
+                Yes, DS-Math did observe similar trends, but their study was limited to <b>a single instruction-tuned model</b> and <b>two math benchmarks</b>. <br>
+                In contrast, Our work systematically investigates this across <b>true base models</b> in a <b>zero-RL setting</b>, covering <b>multiple LLM families</b> and <b>a wider range of benchmarks</b>. <br>
+                We also dive further by providing <b>deeper analyses</b>—including <b>perplexity trends</b>, <b>different RL algorithms</b>, and evaluation against distilled models—offering a more comprehensive view of RLVR's capabilities and limitations. <br>
+                We believe the fact that <b>the reasoning scope of RLVR models is bounded by the base model</b> is a notable phenomenon that deserves deeper attention.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .qa-card {
+    background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin: 2.5rem 0;
+    padding: 2.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .qa-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(255,0,0,0.15); /* 红色 */
+  }
+  
+  .qa-card:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: linear-gradient(180deg, #FF0000 0%, #308030 100%); /* 红到绿 */
+  }
+  
+  .q-marker {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .q-number {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #FF0000; /* 红色 */
+    min-width: 50px;
+    position: relative;
+  }
+  
+  .q-number:after {
+    content: "";
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #308030;
+    border-radius: 50%;
+  }
+  
+  .q-icon, .a-icon {
+    font-size: 1.8rem;
+    font-weight: 800;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .q-icon {
+    background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%); /* 红色渐变 */
+    color: white;
+  }
+  
+  .a-icon {
+    background: linear-gradient(135deg, #308030 0%, #1f6110 100%);
+    color: white;
+  }
+  
+  .qa-question {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .question-text {
+    font-size: 1.3rem;
+    color: #840b0b;
+    margin: 0;
+    line-height: 1.5;
+    position: relative;
+    padding-left: 2rem;
+  }
+  
+  .question-text:before {
+    content: "?";
+    position: absolute;
+    left: 0;
+    top: -0.2em;
+    font-size: 1.8em;
+    color: #FF0000; /* 红色 */
+    opacity: 0.2;
+    font-weight: 800;
+  }
+  
+  .qa-answer {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(76,175,80,0.05);
+    border-radius: 12px;
+    position: relative;
+    margin-left: 3.2rem;
+  }
+  
+  .answer-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #37474f;
+    position: relative;
+    padding-left: 2rem;
+  }
+  
+  .answer-text:before {
+    content: "➤";
+    position: absolute;
+    left: 0;
+    color: #308030;
+    font-size: 1.2em;
+    top: 0.1em;
+  }
+
+  @media (max-width: 480px) {
+    .qa-card {
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+    }
+
+    .q-marker {
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .q-number {
+      font-size: 1.5rem !important;
+      min-width: 40px;
+    }
+
+    .q-icon, .a-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 1.4rem;
+      border-radius: 8px;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      line-height: 1.4;
+      padding-left: 1.5rem;
+    }
+
+    .qa-answer {
+      margin: 1.2rem 0 0 0;
+      padding: 1rem;
+      border-radius: 10px;
+      gap: 1rem;
+    }
+
+    .answer-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      padding-left: 1.5rem;
+    }
+
+    .answer-text:before {
+      left: -0.2rem;
+    }
+
+    .qa-card:before {
+      width: 3px;
+    }
+
+    p {
+      margin-bottom: 0.8em !important;
+    }
+
+    .title.is-3 {
+      font-size: 1.5rem !important;
+      margin-bottom: 2rem !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .qa-card {
+      padding: 1.5rem;
+    }
+    @media (max-width: 480px) {
+      .qa-card {
+        padding: 1.2rem;
+      }
+    }
+  }
+  
+  /* @media (max-width: 768px) {
+    .qa-card {
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .qa-answer {
+      margin-left: 0;
+    }
+    .question-text {
+      padding-left: 0;
+    }
+    .question-text:before {
+      display: none;
+    }
+  } */
+</style>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Fully Open-Source -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Experiments</h2>
+        <div class="content has-text-justified">
+          <p>
+            <span style="font-size: 1.25em;">We conducted experiments across <b>three representative domains</b> to evaluate the effect of RLVR on the reasoning ability boundaries of base and RLVR models.</span> <br>
+          </p>
+          <h3 class="title is-4">Math</h3>
+          <h1 class="subtitle has-text-centered">
+            <img src="./static/images/Math.png" style="display: block; margin: 0 auto; width: 120%;"/>
+          </h1>
+          <p>
+            In the <b>math</b> experiments, we evaluate multiple LLM families (Qwen-2.5 and LLaMA-3.1) and their RL-trained variants on benchmarks like GSM8K, MATH500, and AIME24. 
+            We analyze pass@<i>k</i> curves to compare base and RL-trained models, observing that RL improves low-<i>k</i> performance but reduces problem coverage at high <i>k</i>. 
+            We manually inspect CoT validity to ensure correct answers stem from valid reasoning, not lucky guesses. 
+            Additionally, we examine Oat-Zero-trained models and filter guessable problems to focus on challenging cases. 
+            The results show base models maintain broader reasoning coverage despite RL's initial accuracy gains. 
+          </p>
+          <h3 class="title is-4">Coding</h3>
+          <h1 class="subtitle has-text-centered">
+            <img src="./static/images/Coding.png" style="display: block; margin: 0 auto; width: 90%;"/>
+          </h1>
+          <p>
+            In the <b>coding</b> experiments, we evaluate the RLVR-trained model CodeR1-Zero-Qwen2.5-7B, derived from Qwen2.5-7B-Instruct-1M, on benchmarks like LiveCodeBench, HumanEval+, and MBPP+. 
+            We assess performance using pass@<i>k</i> metrics, measuring correctness based on predefined test cases. 
+            The results show RLVR improves single-sample pass@1 scores but reduces coverage at higher sampling counts (<i>k</i> = 128). 
+            The original model exhibits continued potential for improvement with larger <i>k</i>, while RLVR's performance plateaus. 
+            This indicates RLVR enhances deterministic accuracy but limits exploration diversity. 
+          </p>
+          <h3 class="title is-4">Visual Reasoning</h3>
+          <h1 class="subtitle has-text-centered">
+            <img src="./static/images/qwenvl_7b_instruct_coverage_filter.png" style="display: block; margin: 0 auto; width: 70%;"/>
+          </h1>
+          <p>
+            In the experiments on <b>visual reasoning</b>, we evaluate Qwen-2.5-VL-7B on filtered visual reasoning benchmarks (MathVista and MathVision), removing multiple-choice questions to focus on robust problem-solving. 
+            The improvements from RLVR in visual reasoning align with those seen in math and coding benchmarks, indicating that the original model already covers a broad range of solvable problems, even in multimodal tasks.
+            The consistency across domains suggests that RLVR enhances reasoning capabilities without fundamentally altering the model's problem-solving approach.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Fully Open-Source -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Case Study</h2>
+        <div class="content has-text-justified">
+          <p>
+            We present <span style="font-size: 1.25em;"><I>ONE</I></span> of the sampled correct CoTs from the <span style="font-size: 1.25em;"><b>base</b></span> model, 
+            manually selected from 2048 samplings for the hardest questions in AIME24. 
+            The responses from the base model tend to be long CoTs and exhibit reflective behavior, 
+            highlighting the strong reasoning ability inherent in the base model.
+          </p>
+          <h3 class="title is-4">Example</h3>
+          <h2 class="subtitle has-text-centered">
+            <img src="./static/images/AIME24_16_Base_Answer.png"/>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Fully Open-Source -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">BibTeX</h2>
+        <div class="content has-text-justified">
+          <pre><code>@article{yue2025limit-of-rlvr,
+  title={Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?},
+  author={Yue, Yang and Chen, Zhiqi and Lu, Rui and Zhao, Andrew and Wang, Zhaokai and Yue, Yang and Song, Shiji and Huang, Gao},
+  journal={arXiv preprint arXiv:2504.13837},
+  year={2025}
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</body>
+</html>
