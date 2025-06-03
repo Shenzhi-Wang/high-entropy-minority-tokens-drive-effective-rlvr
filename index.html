@@ -7,7 +7,7 @@
         RL Training Elicits No Transcending Capacity"> 
   <meta name="keywords" content="Qwen, Deepseek-R1, PPO, GRPO, AIME, RLVR, Tsinghua University"> <!-- TODO: add some keywords for search engine -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Limit of RLVR</title>
+  <title>High-Entropy Minority Tokens Drive Effective Reinforcement Learning for LLM Reasoning</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -60,7 +60,7 @@
       <div class="columns is-centered">
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title">
-            Beyond the 80/20 Rule: High-Entropy Minority Tokens Drive Effective Reinforcement Learning for LLM Reasoning
+Beyond the 80/20 Rule: High-Entropy Minority Tokens Drive Effective Reinforcement Learning for LLM Reasoning
           </h1>
 
           <div class="publication-authors">
@@ -154,7 +154,7 @@
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href=""
+                <a href="https://arxiv.org/pdf/2506.01939"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <!-- <i class="fas fa-file-pdf"></i> -->
@@ -165,7 +165,7 @@
               </span>
               <!-- Arxiv Link. -->
               <span class="link-block">
-                <a href=""
+                <a href="https://arxiv.org/abs/2506.01939"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -175,12 +175,12 @@
               </span>
               <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/Shenzhi-Wang/RLVR-Only-High-Entropy-Minority-Tokens"
+                <a href=""
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
-                  <span>GitHub</span>
+                  <span>GitHub (Comming Soon)</span>
                   </a>
               </span>
               <!-- Dataset Link. -->
@@ -216,295 +216,313 @@
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Video -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
+    <div class="columns is-centered">
+      <div class="column">
         <h2 class="subtitle has-text-centered">
-          <video autoplay loop muted playsinline style="max-width: 100%;">
-            <source src="./static/video/introvideo.mp4" type="video/mp4">
-            <source src="./static/video/introvideo.webm" type="video/webm">
-            Your browser does not support the video tag.
-          </video>
+          <img src="./static/images/teaser_png.png" style="display: block; margin: 0 auto; width: 80%;"/>
         </h2>
         <p style="font-size: 0.8rem;">
-          Video: pass@<i>k</i> curves of base models and their zero-RL-trained counterparts across multiple mathematical benchmarks. <br>
-          When <i>k</i> is small, RL-trained models outperform their base versions. However, as <i>k</i> increases to the tens or hundreds, <br>
-          base models consistently catch up with RL-trained models across all benchmarks and LLM families without exception. <br>
-          Eventually, base models surpass RL-trained models.
+          (a) In CoTs, only a minority of tokens exhibit high entropy and act as  "forks" in reasoning paths, while majority tokens are low-entropy. (b) RLVR using policy gradients of forking tokens delivers significant performance gains that scale with model size. With a 20k maximum response length, our 32B model sets new SoTA scores (63.5 on AIME'24 and 56.7 on AIME'25) for RLVR on base models under 600B. Extending the maximum response length to 29k further boosts the AIME'24 score to 68.1.
         </p>
       </div>
     </div>
   </div>
-</section>    
+<!-- </section>    
 
-<section class="section">
+<section class="section"> -->
+
   <div class="container is-max-desktop">
     <!-- Abstract -->
     <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Introducing Our Work</h2>
-        <div class="content has-text-justified">
-          <p>  
-            Recent breakthroughs in reasoning-focused large language models (LLMs) like OpenAI-o1, DeepSeek-R1, and Kimi-1.5 have largely relied on <i>Reinforcement Learning with Verifiable Rewards</i> (RLVR), which replaces human annotations with automated rewards (e.g., verified math solutions or passing code tests) to scale self-improvement. While RLVR enhances reasoning behaviors such as self-reflection and iterative refinement, we challenge a core assumption:  
-          </p>  
-          <p style="font-size: 1.25rem;">  
-          <i><b>Does RLVR actually expand LLMs' reasoning capabilities, or does it merely optimize existing ones?</b></i>  
-          </p>  
-          <p>  
-          By evaluating models via <i>pass@k</i>, where success requires just one correct solution among <i>k</i> attempts, we uncover that RL-trained models excel at low <i>k</i> (e.g., pass@1) but are consistently <i>outperformed by base models</i> at high <i>k</i> (e.g., pass@256). This demonstrates that RLVR <i>narrows the model's exploration</i>, favoring known high-reward paths instead of discovering new reasoning strategies. Crucially, all correct solutions from RL-trained models already exist in the base model's distribution, proving RLVR enhances <i>sampling efficiency</i>, not reasoning capacity, while inadvertently shrinking the solution space.  
-          </p>
-        </div>
-      </div>
+      <!-- <div class="column is-four-fifths"> -->
+          <div class="content has-text-justified">
+            <p>  
+              <br>Reinforcement Learning with Verifiable Rewards (RLVR) has emerged as a powerful approach to enhancing the reasoning capabilities of Large Language Models (LLMs), while its mechanisms are not yet well understood. In this work, we undertake <b>a pioneering exploration of RLVR through the novel perspective of token entropy patterns</b>, comprehensively analyzing how different tokens influence reasoning performance. 
+            </p>  
+          </div>
+      <!-- </div> -->
     </div>
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <video autoplay loop muted playsinline style="max-width: 100%;">
-          <source src="./static/video/overviewvideo.mp4" type="video/mp4">
-          <source src="./static/video/overviewvideo.webm" type="video/webm">
-          Your browser does not support the video tag.
-        </video>
-        <!-- <h2 class="subtitle has-text-centered">
-          <img src="./static/images/overview.png"/>
-        </h2> -->
-        <p style="font-size: 0.8rem;">
-          Video: The effect of RLVR on LLM's reasoning ability. Search trees are generated by repeated sampling from the base and <br>
-          RLVR-trained models for a given problem. Grey indicates paths that are unlikely to be sampled by the model, while black <br>
-          indicates paths that are likely to be sampled. Green indicates correct paths, which has positive rewards. <br>
-          Our key finding is that all reasoning paths in the RLVR model are already present in the base model. <br>
-          For certain problems like Problem A, RLVR training biases the distribution toward rewarded paths, improving sampling <br>
-          efficiency. However, this comes at the cost of reduced scope of reasoning capacity: For other problems like Problem B, <br>
-          the base model contains the correct path, whereas that of the RLVR model does not.
-        </p>
-      </div>
+   
+        <!-- <section class="section"> -->
+          <div class="columns is-centered has-text-centered">
+            <h2 class="title is-3"><br>Takeaways</h2>
+          </div>
+          <div class="container is-max-desktop">
+          <!-- Q&A Section -->
+          <div class="columns is-centered">
+            <!-- <div class="qa-answer">
+              <div class="a-marker">
+                <span class="a-icon">1</span>
+              </div>
+              <div class="answer-text" style="font-size: 1em;">
+                <p>
+                  In CoTs, the majority of tokens are generated with low entropy, while only a small subset exhibits high entropy. These high-entropy minority tokens often act as "forks" in the reasoning process, guiding the model toward diverse reasoning paths. Maintaining high entropy at these critical forking tokens is beneficial for reasoning performance.
+                </p>
+              </div>
+            </div> -->
+
+            <div class="qa-answer" style="flex-direction: column; gap: 1rem;">
+              <div class="qa-row" style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                <div class="a-marker">
+                  <span class="a-icon">1</span>
+                </div>
+                <div class="answer-text" style="font-size: 1em;">
+                  <p>
+                    <b>Entropy patterns in CoTs.</b> In CoTs, the majority of tokens are generated with low entropy, while only a small subset exhibits high entropy. These high-entropy minority tokens often act as "forks" in the reasoning process, guiding the model toward diverse reasoning paths. Maintaining high entropy at these critical forking tokens is beneficial for reasoning performance. 
+                  </p>
+                </div>
+              </div>
+
+              <div class="qa-row" style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                <div class="a-marker">
+                  <span class="a-icon">2</span>
+                </div>
+                <div class="answer-text" style="font-size: 1em;">
+                  <p>
+                    <b>Evolution of entropy patterns in CoTs during RLVR.</b> During RLVR training, the reasoning model largely preserves the base model's entropy patterns, showing only gradual and minor changes. RLVR primarily adjusts the entropy of high-entropy tokens, while the entropy of low-entropy tokens fluctuates only within a narrow range.
+                  </p>
+                </div>
+              </div>
+
+              <div class="qa-row" style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                <div class="a-marker">
+                  <span class="a-icon">3</span>
+                </div>
+                <div class="answer-text" style="font-size: 1em;">
+                  <p>
+                    <b>High-entropy minority tokens drive nearly all reasoning performance gains during RLVR</b>, whereas low-entropy majority tokens contribute little or may even hinder performance. One possible explanation is that, prior to performance convergence, a subset (~20% in our experiments) of high-entropy tokens facilitates exploration, while low-entropy tokens offer minimal benefit or may even impede it.
+                  </p>
+                </div>
+              </div>
+
+              <div class="qa-row" style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                <div class="a-marker">
+                  <span class="a-icon">4</span>
+                </div>
+                <div class="answer-text" style="font-size: 1em;">
+                  <p>
+                    <b>More discussions and insights.</b> Based on the insights above, we further discuss (i) high-entropy minority tokens as a potential reason why supervised fine-tuning (SFT) memorizes but RL generalizes, (ii) how prior knowledge and readability requirements shape the different entropy patterns seen in LLM CoTs compared to traditional RL trajectories, and (iii) the advantage of clip-higher over entropy bonus for RLVR.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="qa-answer">
+              <div class="a-marker">
+                <span class="a-icon">3</span>
+              </div>
+              <div class="answer-text" style="font-size: 1em;">
+                <p>
+                  High-entropy minority tokens drive nearly all reasoning performance gains during RLVR, whereas low-entropy majority tokens contribute little or may even hinder performance. One possible explanation is that, prior to performance convergence, a subset ($\sim20\%$ in our experiments) of high-entropy tokens facilitates exploration, while low-entropy tokens offer minimal benefit or may even impede it.
+                </p>
+              </div>
+            </div>
+
+            <div class="qa-answer">
+              <div class="a-marker">
+                <span class="a-icon">4</span>
+              </div>
+              <div class="answer-text" style="font-size: 1em;">
+                <p>
+                  Based on the insights above, we further discuss (i) high-entropy minority tokens as a potential reason why supervised fine-tuning (SFT) memorizes but RL generalizes, (ii) how prior knowledge and readability requirements shape the different entropy patterns seen in LLM CoTs compared to traditional RL trajectories, and (iii) the advantage of clip-higher over entropy bonus for RLVR.
+                </p>
+              </div>
+            </div> -->
+
+          </div>
     </div>
   </div>
-</section>
+<!-- </section> -->
 
 
-<section class="section">
+<!-- <section class="section"> -->
   <div class="container is-max-desktop">
     <!-- Conclusion -->
     <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Conclusion</h2>
+      <div class="column">
+        <h2 class="title is-3"><br>Entropy Patterns in CoTs</h2>
         <div class="content has-text-justified">
           <ol>
             <li>
-              <span style="font-size: 1.15em;"><b>RL-trained models perform worse than base models in pass@<i>k</i> at large k values.</b></span> <br>
-              While RL-trained models outperform base models at low sampling sizes (small <i>k</i>), base models consistently surpass them at larger <i>k</i> across all benchmarks, even achieving higher pass@<i>k</i> scores. Manual inspection reveals that base models can solve problems thought to require RL training by generating diverse reasoning paths, with at least one correct solution per problem. This indicates that RL training does not enhance—and may even limit—the full reasoning potential of LLMs compared to aggressive sampling in the base model.
+            <span style="font-size: 1.15em;"><b>High-entropy tokens are the minority, while low-entropy tokens constitute the majority.</b></span> <br>
+            Typically, only a minority of tokens are generated with high entropy, while a majority of tokens are outputted with low entropy.
             </li>
             <li>
-              <span style="font-size: 1.15em;"><b>RL boosts sampling efficiency but reduces the reasoning capacity boundary.</b></span> <br>
-              The analysis reveals that RLVR-trained models generate reasoning paths already within the base model's output distribution, meaning RLVR biases the model toward higher-rewarded solutions rather than creating entirely new reasoning abilities. However, this focus on rewarded paths reduces the model's exploration capacity, limiting its coverage of solvable problems at larger sampling sizes. These findings suggest that RLVR does not fundamentally transcend the base model's reasoning capabilities but instead optimizes existing pathways at the cost of broader problem-solving diversity.
+            <span style="font-size: 1.15em;"><b>Highest-entropy tokens serve to bridge the logic, while lowest-entropy tokens completes it.</b></span> <br>
+            Tokens with the highest entropy typically serve to bridge the logical connection between two consecutive parts of reasoning, while tokens with the lowest entropy tend to complete the current part of a sentence or finish constructing a word. Other tokens combine these two functions to varying degrees.
             </li>
+            <img src="./static/images/cot_entropy.png" style="display: block; margin: 0 auto; width: 80%;"/>
+            <p style="font-size: 0.8rem;">
+              Entropy patterns in the chain of thoughts of LLMs. <b>(a) Token entropy distribution.</b> The Y-axis frequency is on a <i>log scale</i>. A minority of tokens exhibit high entropy, while the majority have low entropy, often approaching zero. <b>(b) & (c) Word clouds of the top 100 tokens with the highest and lowest average entropy, respectively, selected from the set of frequently occurring tokens.</b> A larger font size indicates a higher average token entropy. Tokens with the highest average entropy typically function as "forks" to determine reasoning directions, whereas tokens with the lowest average entropy tend to execute reasoning steps along the established path.
+            </p>
+
             <li>
-              <span style="font-size: 1.15em;"><b>RLVR algorithms perform similarly and remain far from optimal.</b></span> <br> 
-              The study compares various RL algorithms (PPO, GRPO, Reinforce++) and finds their performance differences minor, as measured by the sampling efficiency gap (∆SE), which assesses how close they get to optimal sampling efficiency. Despite slight variations in ∆SE among algorithms, the gap remains large across all methods. This indicates that current RL approaches, focused on improving sampling efficiency, still fall far short of optimal performance.
+            <span style="font-size: 1.15em;"><b>High-entropy tokens as "forks" in CoTs.</b></span> <br>
+            High-entropy tokens benefit from being assigned a relatively higher temperature compared to other tokens. Given that high-entropy tokens naturally exhibit higher entropy than other tokens, this further supports the need for them to operate at an even higher entropy level. <b>This observation indicates their role as "forks," where high entropy enables them to branch into diverse reasoning directions.</b> Therefore, we also refer to these high-entropy tokens as <b>forking tokens</b>.
             </li>
-            <li>
-              <span style="font-size: 1.15em;"><b>RLVR and distillation are fundamentally different.</b></span> <br>
-              While RL improves sampling efficiency, distillation can genuinely introduce new knowledge into the model. As a result, distilled models often exhibit an expanded scope of reasoning capability beyond that of the base model by learning from distilled models, in contrast to RLVR-trained models whose capacity remains bounded by the base.
+            <img src="./static/images/inference_with_varying_temp.png" style="display: block; margin: 0 auto; width: 50%;"/>
+            <p style="font-size: 0.8rem;">
+              Average scores of AIME 2024 and AIME 2025. <b>Red curve:</b> varying the decoding temperature of high-entropy tokens while keeping the decoding temperature of low-entropy tokens fixed at 1. <b>Blue curve:</b> adjusting the decoding temperature of low-entropy tokens while maintaining the decoding temperature of high-entropy tokens at 1.
+            </p>
             </li>
           </ol>
         </div>
       </div>
     </div>
   </div>
-</section>
+<!-- </section> -->
 
 
-<section class="section">
+<!-- <section class="section"> -->
   <div class="container is-max-desktop">
-    <!-- Q&A Section -->
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3 has-text-centered" style="margin-bottom: 3rem;">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fas fa-comments" style="color: #2196F3;"></i>
-            </span>
-            <span>Q&A</span>
-          </span>
-        </h2>
+    <!-- Conclusion -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3"><br>RLVR Preserves and Reinforces Base Model Entropy Patterns</h2>
 
-        <!-- Q&A Item 1 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">01</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              You're using pass@<i>k</i> instead of majority vote—doesn't that make the results invalid?
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                [1/3] We use pass@<i>k</i> <b>not to measure practical utility</b>, but to explore the <b>reasoning capacity boundary</b> of LLMs, as outlined in our paper. <br>
-                [2/3] If a model can solve a difficult problem at least once in <i>k</i> samples, we consider that problem within its potential reasoning scope. If RL training truly expands reasoning, we would expect the RL model to solve more such problems than the base. <br>
-                [3/3] However, we observe the opposite: <b>RLVR models often solve <i>fewer</i> problems at large <i>k</i></b>, suggesting a narrowing of this boundary. This implies RLVR is optimizing within the base model's capabilities, not extending them.
-              </p>
-            </div>
-          </div>
-        </div>
+        <div class="content has-text-justified">
+          <ol>
+            <li>
+              <span style="font-size: 1.15em;"><b>RLVR primarily preserves the existing entropy patterns of the base models.</b></span> <br>
+              As shown in the following table, although overlap with the base model gradually decreases and overlap with the final RLVR model increases, the base model's overlap still remains above 86% at convergence (step 1360), suggesting that RLVR largely retains the base model's entropy patterns regarding which tokens exhibit high or low uncertainty.
+            </li>
 
-        <!-- Q&A Item 2 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">02</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              Isn't pass@<i>k</i> meaningless since you could eventually guess the right answer through randomly sampling <i>k</i> times?
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                [1/3] It's true that pass@1024 can be noisy for datasets like AIME whose answers are within limited integer space. But we also evaluated <b>coding benchmarks</b>, where guessing is nearly impossible to pass unit test case, and yet similar patterns hold, with base models performing better at large <i>k</i>. <br>
-                [2/3] For <b>AIME</b> and <b>GSM8K</b>, we manually inspected the CoT outputs and found that, in most cases, the base model produced <b>at least one <i>correct</i> reasoning path</b>—not just lucky guesses. <br>
-                [3/3] On datasets usch <b>MATH500</b>, where answers involve complex forms (roots, fractions, symbolic math) and are hard to guess, we again observed similar trends. <br>
-                Together, these results highlight the often underappreciated <b>reasoning potential of base models</b>. We're considering including a random sampling baseline in future work.
-              </p>
-            </div>
-          </div>
-        </div>
+<table style="width:100%; border-collapse:collapse; font-size:small;">
+  <p style="font-size: 0.8rem;">
+    <br>The progression of the overlap ratio in the positions of the top 20% high-entropy tokens, comparing the base model (i.e., step 0) with the model after RLVR training (i.e., step 1360).
+  </p>
+  <thead style="border-bottom:2px solid #000;">
+    <tr>
+      <th style="border:1px solid #ddd; padding:5px; text-align:left;">Compared w/</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 0</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 16</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 112</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 160</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 480</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 800</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 864</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 840</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 1280</th>
+      <th style="border:1px solid #ddd; padding:5px; text-align:center;">Step 1360</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border:1px solid #ddd; padding:5px;">Base Model</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">100%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">98.92%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">98.70%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">93.04%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">93.02%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">93.03%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">87.45%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">87.22%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">87.09%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">86.67%</td>
+    </tr>
+    <tr style="border-bottom:2px solid #000;">
+      <td style="border:1px solid #ddd; padding:5px;">RLVR Model</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">86.67%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">86.71%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">86.83%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">90.64%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">90.65%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">90.64%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">96.61%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">97.07%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">97.34%</td>
+      <td style="border:1px solid #ddd; padding:5px; text-align:center;">100%</td>
+    </tr>
+  </tbody>
+</table>
 
-        <!-- Q&A Item 3 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">03</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              <b>Even random sampling can eventually generate the correct answer with a large enough <i>k</i>. So doesn't that make your result—that RL improves over base model's pass@<i>k</i>—meaningless?</b>
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                Not quite. <b>“More is different.”</b> While it's true that in theory, even random typing has a non-zero chance of producing a correct answer—about 1/V^L, where V is the vocabulary size (~30k) and L is the output length (>200). However, in practice, that search space is <b>astronomically large</b>. <br>
-                The key point is that the <b>magnitude of that probability matters</b>. If the base model has a prior that gives the correct answer a 1 in 10⁴ or 10⁵ chance, then RL might find it with millions of samples. But if that probability is 1 in 10¹⁰ or smaller, <b>RL is extremely unlikely to escape local optima</b> and reach meaningful reward. <br>
-                In our paper, we show that for most problems, <b>this probability is not negligible</b>—we observe correct outputs with <i>k</i> = 128 or 1024, which is feasible with today's resources. So rather than being meaningless, <b>pass@<i>k</i> reveals that base models already possess the necessary reasoning paths</b>.              
-              </p>
-            </div>
-          </div>
+          <li>
+            <span style="font-size: 1.15em;"><b>RLVR predominantly alters the entropy of high-entropy tokens, whereas the entropy of low-entropy tokens remains comparatively stable with minimal variations.</b></span> <br>
+               We compute the average entropy change after RLVR for each 5% entropy percentile range of the base model in the following figure. It is observed that tokens with higher initial entropy in the base model tend to exhibit larger increases in entropy after RLVR. This observation could also further reinforce that RLVR primarily preserves the entropy patterns of the base model.
+            <img src="./static/images/entropy_change_percentiles.png" style="display: block; margin: 0 auto; width: 80%;"/>
+            <p style="font-size: 0.8rem;">
+              Average entropy change after RLVR within each 5% entropy percentile range of the base model. x% percentile means that x% of the tokens in the dataset have entropy values less than or equal to this value. It is worth noting that the Y-axis is presented on a <i>log scale</i>. Tokens with higher initial entropy tend to experience greater entropy increases after RLVR.
+            </p>
+          </li>
+          </ol>
         </div>
-
-        <!-- Q&A Item 4 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">04</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              <b>Isn't it common sense that RL should turn pass@<i>k</i> into pass@1?</b>
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                It's not surprising that RLVR turns pass@<i>k</i> into pass@1—that's what RL is designed for. <br>
-                But what's more interesting is that <b>RLVR doesn't do much beyond that in our experiments</b>. It doesn't seem to introduce new reasoning abilities: <b>if the base model can't solve a problem, the RL-trained model still can't either.</b> This clearly highlights the <b>upper bound of RL in reasoning</b>. <br>
-                And that's not something obvious. In traditional RL such as Atari or Go, RL is known to <b>explore and discover new strategies, continuously self-improving without an inherent bound</b>. But in the case of LLMs, RLVR seems constrained by the base model's existing capabilities. <br>
-                Actually, this phenomenon that <b>RL-trained models perform worse than base models in pass@<i>k</i></b> surprises lots of researchers.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Q&A Item 5 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">05</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              Does your paper claim that RL can't incentivize reasoning beyond the base model?
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                No, we're not making such a strong claim. Our goal is to <b>present systematic experiments and analyses</b> to explore the question: <i>"Does RL truly expand reasoning capacity in LLMs?"</i> and hope bring some new insights for the community. <br>
-                We don't rule out the possibility that <b>scaling up model size and training data</b> could change the outcome. In fact, we're currently working on <b>DeepSeek-V3-base vs. R1-zero</b> to investigate this further.              
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Q&A Item 6 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">06</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              Is your paper saying RL is useless?
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                No. RL remains <b>practically useful</b> because it improves sample efficiency. However, if we want LLMs to solve <b>truly harder problems beyond pretraining</b>, we may need <b>a new training paradigm</b> that can go beyond the base model's ceiling.              
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Q&A Item 7 -->
-        <div class="qa-card">
-          <div class="qa-question">
-            <div class="q-marker">
-              <span class="q-number" style="font-size: 2em;">07</span>
-              <span class="q-icon">Q</span>
-            </div>
-            <h3 class="question-text" style="font-size: 1.25em;">
-              <b>DeepSeek-Math reported similar results. How is your work different?</b>
-            </h3>
-          </div>
-          <div class="qa-answer">
-            <div class="a-marker">
-              <span class="a-icon">A</span>
-            </div>
-            <div class="answer-text" style="font-size: 0.9em;">
-              <p>
-                Yes, DS-Math did observe similar trends, but their study was limited to <b>a single instruction-tuned model</b> and <b>two math benchmarks</b>. <br>
-                In contrast, Our work systematically investigates this across <b>true base models</b> in a <b>zero-RL setting</b>, covering <b>multiple LLM families</b> and <b>a wider range of benchmarks</b>. <br>
-                We also dive further by providing <b>deeper analyses</b>—including <b>perplexity trends</b>, <b>different RL algorithms</b>, and evaluation against distilled models—offering a more comprehensive view of RLVR's capabilities and limitations. <br>
-                We believe the fact that <b>the reasoning scope of RLVR models is bounded by the base model</b> is a notable phenomenon that deserves deeper attention.
-              </p>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
-</section>
+<!-- </section> -->
+
+
+
+
+<!-- <section class="section"> -->
+  <div class="container is-max-desktop">
+    <!-- Conclusion -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3"><br>High-Entropy Minority Tokens Drive Effective RLVR</h2>
+
+        <div class="content has-text-justified">
+          <ol>
+            We use <a href="https://arxiv.org/abs/2503.14476">DAPO</a> as the baseline and adapt it by <b>discarding the policy gradients of the bottom 80% low-entropy tokens, focusing instead on training the model using only the policy gradients of the top 20% high-entropy tokens (i.e., forking tokens).</b><br><br>
+            <li>
+              Retaining only the top 20% of high-entropy tokens does not negatively impact performance on the 8B model and even leads to significant improvements on the 14B and 32B models, highlighting <b>a strong scaling trend as model size increases</b>.
+              <img src="./static/images/rlvr_performance_table.png" style="display: block; margin: 0 auto; width: 80%;"/>
+              <p style="font-size: 0.8rem;">
+                Comparison between <i>vanilla DAPO using all tokens</i> and <i>DAPO using only the top 20% high-entropy tokens (i.e. forking tokens)</i> in policy gradient loss, evaluated on the <i>Qwen3-32B</i>, <i>Qwen3-14B</i> and <i>Qwen3-8B</i> base models. "Acc@16" and "Len@16" denotes the average accuracy and response length over 16 evaluations per benchmark, respectively.<br>
+              </p>
+            </li>
+
+            <li>
+              Especially, with a 20k maximum response length, <b>our 32B model sets new SoTA scores (63.5 on AIME'24 and 56.7 on AIME'25) for RLVR on base models under 600B</b>.
+              <img src="./static/images/rlvr_32b.png" style="display: block; margin: 0 auto; width: 80%;"/>
+              <p style="font-size: 0.8rem;">
+                Curves of AIME'24 scores and response lengths with a maximum response length of 20k, trained from the Qwen3-32B base model. Dropping the bottom 80% low-entropy tokens stabilizes training and improves the AIME'24 score by 7.73.<br>
+              </p>
+            </li>
+
+            
+            <li>
+              Extending the maximum response length to 29k <b>further boosts the AIME'24 score to 68.1</b>.
+              <img src="./static/images/longer_context.png" style="display: block; margin: 0 auto; width: 80%;"/>
+              <p style="font-size: 0.8rem;">
+                By extending the maximum response length from 20k to 29k and continuing training from the SoTA 32B model shown in the figure above, the AIME'24 scores improve further from 63.54 to 68.12, alongside a notable increase in response length.
+              </p>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- </section> -->
+
+  <div class="container is-max-desktop">
+    <!-- Conclusion -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3"><br>Discussions</h2>
+
+        <div class="content has-text-justified">
+          <ol>
+            
+            <li>
+              <b>High-entropy minority tokens (i.e., forking tokens) could play a key role in explaining why RL generalizes while SFT memorizes.</b>
+            </li>
+
+            <li>
+              <b>Unlike traditional RL, LLM reasoning integrates prior knowledge and must produce readable output. Consequently, LLM CoTs contain a mix of low-entropy majority tokens and high-entropy minority tokens, whereas traditional RL can assume uniform action entropy throughout a trajectory.</b>
+            </li>
+
+            
+            <li>
+              <b>In RLVR, entropy bonus may be suboptimal, as it increases the entropy of low-entropy majority tokens. In contrast, clip-higher effectively promotes entropy in high-entropy minority tokens.</b>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <style>
   .qa-card {
@@ -615,7 +633,7 @@
     background: rgba(76,175,80,0.05);
     border-radius: 12px;
     position: relative;
-    margin-left: 3.2rem;
+    margin-left: 0rem;
   }
   
   .answer-text {
@@ -724,75 +742,6 @@
   } */
 </style>
 
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Fully Open-Source -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Experiments</h2>
-        <div class="content has-text-justified">
-          <p>
-            <span style="font-size: 1.25em;">We conducted experiments across <b>three representative domains</b> to evaluate the effect of RLVR on the reasoning ability boundaries of base and RLVR models.</span> <br>
-          </p>
-          <h3 class="title is-4">Math</h3>
-          <h1 class="subtitle has-text-centered">
-            <img src="./static/images/Math.png" style="display: block; margin: 0 auto; width: 120%;"/>
-          </h1>
-          <p>
-            In the <b>math</b> experiments, we evaluate multiple LLM families (Qwen-2.5 and LLaMA-3.1) and their RL-trained variants on benchmarks like GSM8K, MATH500, and AIME24. 
-            We analyze pass@<i>k</i> curves to compare base and RL-trained models, observing that RL improves low-<i>k</i> performance but reduces problem coverage at high <i>k</i>. 
-            We manually inspect CoT validity to ensure correct answers stem from valid reasoning, not lucky guesses. 
-            Additionally, we examine Oat-Zero-trained models and filter guessable problems to focus on challenging cases. 
-            The results show base models maintain broader reasoning coverage despite RL's initial accuracy gains. 
-          </p>
-          <h3 class="title is-4">Coding</h3>
-          <h1 class="subtitle has-text-centered">
-            <img src="./static/images/Coding.png" style="display: block; margin: 0 auto; width: 90%;"/>
-          </h1>
-          <p>
-            In the <b>coding</b> experiments, we evaluate the RLVR-trained model CodeR1-Zero-Qwen2.5-7B, derived from Qwen2.5-7B-Instruct-1M, on benchmarks like LiveCodeBench, HumanEval+, and MBPP+. 
-            We assess performance using pass@<i>k</i> metrics, measuring correctness based on predefined test cases. 
-            The results show RLVR improves single-sample pass@1 scores but reduces coverage at higher sampling counts (<i>k</i> = 128). 
-            The original model exhibits continued potential for improvement with larger <i>k</i>, while RLVR's performance plateaus. 
-            This indicates RLVR enhances deterministic accuracy but limits exploration diversity. 
-          </p>
-          <h3 class="title is-4">Visual Reasoning</h3>
-          <h1 class="subtitle has-text-centered">
-            <img src="./static/images/qwenvl_7b_instruct_coverage_filter.png" style="display: block; margin: 0 auto; width: 70%;"/>
-          </h1>
-          <p>
-            In the experiments on <b>visual reasoning</b>, we evaluate Qwen-2.5-VL-7B on filtered visual reasoning benchmarks (MathVista and MathVision), removing multiple-choice questions to focus on robust problem-solving. 
-            The improvements from RLVR in visual reasoning align with those seen in math and coding benchmarks, indicating that the original model already covers a broad range of solvable problems, even in multimodal tasks.
-            The consistency across domains suggests that RLVR enhances reasoning capabilities without fundamentally altering the model's problem-solving approach.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Fully Open-Source -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Case Study</h2>
-        <div class="content has-text-justified">
-          <p>
-            We present <span style="font-size: 1.25em;"><I>ONE</I></span> of the sampled correct CoTs from the <span style="font-size: 1.25em;"><b>base</b></span> model, 
-            manually selected from 2048 samplings for the hardest questions in AIME24. 
-            The responses from the base model tend to be long CoTs and exhibit reflective behavior, 
-            highlighting the strong reasoning ability inherent in the base model.
-          </p>
-          <h3 class="title is-4">Example</h3>
-          <h2 class="subtitle has-text-centered">
-            <img src="./static/images/AIME24_16_Base_Answer.png"/>
-          </h2>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="section">
   <div class="container is-max-desktop">
@@ -801,11 +750,14 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">BibTeX</h2>
         <div class="content has-text-justified">
-          <pre><code>@article{yue2025limit-of-rlvr,
-  title={Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?},
-  author={Yue, Yang and Chen, Zhiqi and Lu, Rui and Zhao, Andrew and Wang, Zhaokai and Yue, Yang and Song, Shiji and Huang, Gao},
-  journal={arXiv preprint arXiv:2504.13837},
-  year={2025}
+          <pre><code>@misc{wang20258020rulehighentropyminority,
+      title={Beyond the 80/20 Rule: High-Entropy Minority Tokens Drive Effective Reinforcement Learning for LLM Reasoning}, 
+      author={Shenzhi Wang and Le Yu and Chang Gao and Chujie Zheng and Shixuan Liu and Rui Lu and Kai Dang and Xionghui Chen and Jianxin Yang and Zhenru Zhang and Yuqiong Liu and An Yang and Andrew Zhao and Yang Yue and Shiji Song and Bowen Yu and Gao Huang and Junyang Lin},
+      year={2025},
+      eprint={2506.01939},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2506.01939}, 
 }</code></pre>
         </div>
       </div>
